@@ -24,8 +24,9 @@ public class Topic {
 
     @OneToMany(mappedBy="topic", fetch = FetchType.EAGER)
     @JsonManagedReference
-    private List<Topictags> topictags;
+    private List<Topictags> tags;
 
+    private String section;
 
     @NotNull
     private String name;
@@ -51,11 +52,19 @@ public class Topic {
     this.id = id;
   }
 
-  public List<Topictags> getTopictags() {
-    return topictags;
+  public List<Topictags> getTags() {
+    return tags;
   }
 
-  public void setTopictags(List<Topictags> topictags) {
-    this.topictags = topictags;
+  public void setTags(List<Topictags> tags) {
+    this.tags = tags;
+  }
+
+  public String getSection() {
+    return section;
+  }
+
+  public void setSection(String section) {
+    this.section = section;
   }
 }

@@ -16,6 +16,7 @@ public class Topictags {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @JsonIgnore
   private Integer id;
 
   @NotNull

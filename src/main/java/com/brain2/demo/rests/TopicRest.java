@@ -3,8 +3,10 @@ package com.brain2.demo.rests;
 import java.util.List;
 import java.util.Optional;
 
+import com.brain2.demo.models.Topicsections;
 import com.brain2.demo.models.Topic;
 import com.brain2.demo.models.Topictags;
+import com.brain2.demo.repos.SectionRepo;
 import com.brain2.demo.repos.TopicRepo;
 import com.brain2.demo.repos.TopicTagsRepo;
 
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/topics")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://brainmatter.xyz"})
 public class TopicRest {
 
     @Autowired
@@ -25,6 +27,14 @@ public class TopicRest {
 
     @Autowired
     TopicTagsRepo topicTagsRepo;
+
+    @Autowired
+    SectionRepo sectionRepo;
+
+    @GetMapping("/sections")
+    public Iterable<Topicsections> getSections() {
+        return sectionRepo.findAll();
+    }
 
     @GetMapping
     public Iterable<Topic> getAll() {
@@ -36,7 +46,6 @@ public class TopicRest {
         return topicRepo.findById(id);
     }
 
-    
     @GetMapping("/topicsWithTags")
     public Iterable<Topictags> getTopicsWithTags() {
         return topicTagsRepo.findAll();

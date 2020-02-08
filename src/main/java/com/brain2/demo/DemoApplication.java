@@ -20,7 +20,10 @@ public class DemoApplication {
 	private static final Logger log = LoggerFactory.getLogger(DemoApplication.class);
 
 	public static void main(String[] args) {
+		System.out.println("HAHAHAHAHA 222222222 666666666666666");
 		SpringApplication.run(DemoApplication.class, args);
+		System.out.println("HAHAHAHAHA2 11111111111");
+		System.out.println("HAHAHAHAHA2 2222 555 333 99999999999");
 	}
 
 	@Bean
@@ -34,7 +37,6 @@ public class DemoApplication {
 
 			for (Topic topic : repository.findAll()) {
 				log.info(topic.toString());
-				log.info(topic.getTopictags().toString());
 			}
 			// log.info("");
 
