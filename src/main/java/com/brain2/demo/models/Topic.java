@@ -12,32 +12,33 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-
-
 @Entity
 public class Topic {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
 
+  @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
+  @JsonManagedReference
+  private List<Topictags> tags;
 
-    @OneToMany(mappedBy="topic", fetch = FetchType.EAGER)
-    @JsonManagedReference
-    private List<Topictags> tags;
+  private String section;
 
-    private String section;
+  @NotNull
+  private String name;
 
-    @NotNull
-    private String name;
+  @NotNull
+  private Integer activeCurrently;
+  
 
-    public String getName() {
-      return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-      this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
   @Override
   public String toString() {
@@ -66,5 +67,13 @@ public class Topic {
 
   public void setSection(String section) {
     this.section = section;
+  }
+
+  public Integer getActiveCurrently() {
+    return activeCurrently;
+  }
+
+  public void setActiveCurrently(Integer activeCurrently) {
+    this.activeCurrently = activeCurrently;
   }
 }
