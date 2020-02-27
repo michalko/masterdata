@@ -7,10 +7,12 @@ import com.brain2.demo.models.User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
-
+/**
+    Merges updates to object, used for for patch rest for example
+*/
 @Service
-public class MergeUpdates {
-    public <T> void partialUpdate(T object, Map<String, Object> updates) {
+public class MergeUpdatesService {
+    public <T> void mergeUpdates(T object, Map<String, Object> updates) {
         removeIDs(updates);
 
         updates.forEach((k, v) -> {
@@ -24,6 +26,7 @@ public class MergeUpdates {
         System.out.println(object.toString());
     }
 
+    /* for security remove ids from updates */
     private void removeIDs(Map<String, Object> updates) {
         updates.remove("id");
         updates.remove("firebase_id");

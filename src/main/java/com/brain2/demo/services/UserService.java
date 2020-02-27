@@ -13,21 +13,14 @@ import org.springframework.util.ReflectionUtils;
 @Service
 public class UserService {
     @Autowired
-    MergeUpdates partialUpdateService;
-
+    MergeUpdatesService mergeUpdatesService;
     @Autowired
     UserRepo userRepo;
 
     public void partialUpdate(User user, Map<String, Object> updates) {
+        mergeUpdatesService.mergeUpdates(user, updates);
 
-        partialUpdateService.partialUpdate(user, updates);
-
-        System.out.println(user.toString());
+        System.out.println("Updating to " + user.toString());
         userRepo.save(user);
-    }
-
-    private void removeIDs(Map<String, Object> updates) {
-        updates.remove("id");
-        updates.remove("firebase_id");
     }
 }

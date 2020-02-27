@@ -36,7 +36,6 @@ public class UserRest {
         if (user.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found");
         }
-        System.out.println(user.get().toString());
         userService.partialUpdate(user.get(), updates);
     }
 
