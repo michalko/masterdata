@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.brain2.demo.repos.UserRepo;
 import com.brain2.demo.services.UserService;
@@ -28,15 +29,29 @@ public class UserRest {
     @Autowired
     UserService userService;
 
+    @PatchMapping(value = "/{fid}/startTest")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    void startTest(@Size(min = 5) @NotNull @PathVariable(value = "fid") final String fid) {
+        final var user = userRepo.findByFirebaseId(fid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
+
+        final var testAlreadyStarted = user.getStartedTest();
+
+        user.setStartedTest(true);
+        userRepo.save(user);
+
+        if (testAlreadyStarted) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Test interrupted");
+        }
+    }
+
     @PatchMapping(value = "/{fid}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    void patchUser(@NotNull @NotEmpty @RequestBody Map<String, @NotNull Object> updates,
-            @NotNull @PathVariable(value = "fid") String fid) {
-        var user = userRepo.findByFirebaseId(fid);
-        if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found");
-        }
-        userService.partialUpdate(user.get(), updates);
+    void patchUser(@NotNull @NotEmpty @RequestBody final Map<String, @NotNull Object> updates,
+            @NotNull @PathVariable(value = "fid") final String fid) {
+        final var user = userRepo.findByFirebaseId(fid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
+        userService.partialUpdate(user, updates);
     }
 
 }

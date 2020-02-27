@@ -19,8 +19,6 @@ public class UserService {
 
     public void partialUpdate(User user, Map<String, Object> updates) {
         mergeUpdatesService.mergeUpdates(user, updates);
-
-        System.out.println("Updating to " + user.toString());
         userRepo.save(user);
     }
 }
