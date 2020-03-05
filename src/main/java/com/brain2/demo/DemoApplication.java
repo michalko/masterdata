@@ -1,9 +1,5 @@
 package com.brain2.demo;
 
-import java.util.Arrays;
-
-import com.brain2.demo.models.Topic;
-import com.brain2.demo.models.Topictags;
 import com.brain2.demo.repos.TopicRepo;
 import com.brain2.demo.repos.TopicTagsRepo;
 
@@ -26,15 +22,16 @@ public class DemoApplication {
 	@Bean
 	public CommandLineRunner demo(TopicRepo repository, TopicTagsRepo repository2) {
 		return (args) -> {
+			String result = "qweqwe";
+			System.out.println(result);
+			// System.out.println(Arrays.toString(args));
+			// // fetch all customers
+			// log.info("Topics found with findAll():");
+			// log.info("-------------------------------");
 
-			System.out.println(Arrays.toString(args));
-			// fetch all customers
-			log.info("Topics found with findAll():");
-			log.info("-------------------------------");
-
-			for (Topic topic : repository.findAll()) {
-				log.info(topic.toString());
-			}
+			// for (Topic topic : repository.findAll()) {
+			// log.info(topic.toString());
+			// }
 			// log.info("");
 
 			// // fetch all customers
@@ -42,7 +39,7 @@ public class DemoApplication {
 			// log.info("-------------------------------");
 
 			// for (Topictags tag : repository2.findAll()) {
-			// 	log.info(tag.toString());
+			// log.info(tag.toString());
 			// }
 			// log.info("");
 
