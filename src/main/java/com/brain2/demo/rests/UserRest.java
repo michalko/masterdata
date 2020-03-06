@@ -25,7 +25,33 @@ import org.springframework.web.server.ResponseStatusException;
 @CrossOrigin(origins = { "http://localhost:3000", "https://brainmatter.xyz" })
 public class UserRest {
     @Autowired
-    UserRepo PostRepo;
+    UserRepo userRepo;
+    @Autowired
+    UserService userService;
 
+    @PatchMapping(value = "/{fid}/startTest")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    void startTest(@Size(min = 5) @NotNull @PathVariable(value = "fid") final String fid) {
+        final var user = userRepo.findByFirebaseId(fid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
+
+        final var testAlreadyStarted = user.getStartedTest();
+
+        user.setStartedTest(true);
+        userRepo.save(user);
+
+        if (testAlreadyStarted) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Test interrupted");
+        }
+    }
+
+    @PatchMapping(value = "/{fid}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    void patchUser(@NotNull @NotEmpty @RequestBody final Map<String, @NotNull Object> updates,
+            @NotNull @PathVariable(value = "fid") final String fid) {
+        final var user = userRepo.findByFirebaseId(fid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
+        userService.partialUpdate(user, updates);
+    }
 
 }

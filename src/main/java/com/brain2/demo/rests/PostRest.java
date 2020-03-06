@@ -1,69 +1,73 @@
 package com.brain2.demo.rests;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
-import com.brain2.demo.models.Topic;
-import com.brain2.demo.models.Topicsections;
-import com.brain2.demo.models.Topictags;
-import com.brain2.demo.repos.SectionRepo;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import com.brain2.demo.models.Post;
+import com.brain2.demo.repos.PostRepo;
 import com.brain2.demo.repos.TopicRepo;
-import com.brain2.demo.repos.TopicTagsRepo;
+import com.brain2.demo.services.MergeUpdatesService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/topics")
+@RequestMapping("/posts")
 @CrossOrigin(origins = { "http://localhost:3000", "https://brainmatter.xyz" })
-public class TopicRest {
+public class PostRest {
+    @Autowired
+    PostRepo postRepo;
 
     @Autowired
     TopicRepo topicRepo;
-
     @Autowired
-    TopicTagsRepo topicTagsRepo;
+    MergeUpdatesService mergeUpdatesService;
 
-    @Autowired
-    SectionRepo sectionRepo;
+    @PutMapping
+    @ResponseStatus(code = HttpStatus.OK)
+    public void setPost(@NotNull @RequestBody final Map<String, @NotNull Object> updates) {
 
-    @GetMapping("/sections")
-    public Iterable<Topicsections> getSections() {
-        return sectionRepo.findAll();
+        System.out.println(updates);
+        System.out.println(updates.get("topic"));
+
+        final var post = new Post();
+        post.setId(updates.get("id").toString());
+        final var topic = topicRepo.findById(Long.valueOf(updates.get("topic").toString()))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Topic not found"));
+        post.setTopic(topic);
+        updates.remove("topic");
+        mergeUpdatesService.mergeUpdates(post, updates);
+
+        System.out.println(updates);
+        System.out.println(post);
+        postRepo.save(post);
     }
 
-    @GetMapping
-    public Iterable<Topic> getAll() {
-        return topicRepo.findAll();
+    @PatchMapping
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void patchPost(@NotNull @NotEmpty @RequestBody final Map<String, @NotNull Object> updates,
+            @NotNull @PathVariable(value = "id") final Long id) {
+        final var post = postRepo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post not found"));
+        mergeUpdatesService.mergeUpdates(post, updates);
+        postRepo.save(post);
     }
 
-    @GetMapping("/get/{id}")
-    public Optional<Topic> getTopic(@PathVariable Long id) {
-        return topicRepo.findById(id);
+    @GetMapping(value = "/getRandomBetween")
+    @ResponseStatus(code = HttpStatus.OK)
+    public @NotNull Integer getRandomPostBetween(@NotNull String topic, @NotNull Integer corectPrecent) {
+        return postRepo.findRandomWithCorrectRatioBetween(topic, corectPrecent - 10, corectPrecent + 10);
     }
-
-    @GetMapping("/topicsWithTags")
-    public Iterable<Topictags> getTopicsWithTags() {
-        return topicTagsRepo.findAll();
-    }
-
-    @GetMapping("/topicsWithTagsFor")
-    public List<Topictags> getTopicsWithTagsFor() {
-        return topicTagsRepo.findByTopic_Name("Java");
-    }
-
-    @PutMapping(value = "/incActive")
-    @ResponseStatus(value = HttpStatus.OK)
-    void incrementActive(@RequestBody List<String> topics) {
-        topicRepo.incrementActiveForTopics(topics);
-    }
-
 }
