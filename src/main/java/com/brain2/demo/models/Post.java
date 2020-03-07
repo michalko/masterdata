@@ -1,8 +1,6 @@
 package com.brain2.demo.models;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,6 +22,9 @@ public class Post {
 
   @NotNull
   private Integer realPostsInTopics;
+
+  @NotNull
+  private String topicName;
 
   public Integer getRealPostsInTopics() {
     return realPostsInTopics;
@@ -61,6 +62,14 @@ public class Post {
 
   public void setCorrectPrecent(Double correctPrecent) {
     this.correctPrecent = correctPrecent;
+  }
+
+  public String getTopicName() {
+    return topicName;
+  }
+
+  public void setTopicName(String topicName) {
+    this.topicName = topicName;
   }
 
 }

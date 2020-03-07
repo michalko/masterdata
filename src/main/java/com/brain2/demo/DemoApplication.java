@@ -1,5 +1,8 @@
 package com.brain2.demo;
 
+import java.util.Random;
+import java.util.stream.IntStream;
+
 import com.brain2.demo.repos.TopicRepo;
 import com.brain2.demo.repos.TopicTagsRepo;
 
@@ -22,8 +25,14 @@ public class DemoApplication {
 	@Bean
 	public CommandLineRunner demo(TopicRepo repository, TopicTagsRepo repository2) {
 		return (args) -> {
-			String result = "qweqwe";
-			System.out.println(result);
+			// create random object
+			Random randomno = new Random();
+		  
+			// check next Gaussian value  
+			// IntStream.range(1, 70).forEach(i -> {
+			// 	System.out.println(i);
+			// 	System.out.println("Next Gaussian value: " + randomno.nextGaussian());
+			// });
 			// System.out.println(Arrays.toString(args));
 			// // fetch all customers
 			// log.info("Topics found with findAll():");
