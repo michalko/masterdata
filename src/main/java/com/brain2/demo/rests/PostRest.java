@@ -3,6 +3,7 @@ package com.brain2.demo.rests;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotEmpty;
@@ -87,8 +88,13 @@ public class PostRest {
             @RequestParam("topRank") final int topRank) {
 
         System.out.println("last posts ids 1: " + lastReadPosts.getLastPostsIds().toString());
-        final var list = postRepo.findRandomsWithinCorrectRatio(topic, topRank, lastReadPosts.getLastPostsIds());
+        Set<String> combinedSet = Sets.union(lastReadPosts.getLastPostsIds(), Set.of(lastReadPosts.getLastPid()));
+        final var list = postRepo.findRandomsWithinCorrectRatio(topic, topRank, combinedSet);
         final var listSize = list.size();
+        if (lastReadPosts.getPostsNum() == 0 || Math.abs(lastReadPosts.getTopRank() - topRank) > 10) {
+            lastReadPosts.setPostsNum(listSize);
+            lastReadPosts.setTopRank(topRank);
+        }
 
         final var g = random.nextGaussian();
         final var g1 = (listSize / 4) * (g);
@@ -101,6 +107,8 @@ public class PostRest {
 
         final var postToReturn = list.get(gaussFinal);
         lastReadPosts.addPost(postToReturn.getId());
+
+        lastReadPosts.setLastPid(postToReturn.getId());
         System.out.println("last posts ids 2: " + lastReadPosts.getLastPostsIds().toString());
         return postToReturn.getRealPostsInTopics();
     }
@@ -117,9 +125,17 @@ public class PostRest {
         @Component
         public class LastReadPosts {
             private final Set<String> lastPosts;
+            private int postsNum;
+            private int topRank;
+            private String lastPid = "0";
 
             LastReadPosts() {
                 lastPosts = Sets.newHashSet("1");
+            }
+
+            void clear() {
+                lastPosts.clear();
+                postsNum = 0;
             }
 
             Set<String> getLastPostsIds() {
@@ -128,6 +144,33 @@ public class PostRest {
 
             void addPost(final String pid) {
                 lastPosts.add(pid);
+                if (lastPosts.size() > (postsNum / 2)) {
+                    clear();
+                }
+            }
+
+            public int getPostsNum() {
+                return postsNum;
+            }
+
+            public void setPostsNum(int postsNum) {
+                this.postsNum = postsNum;
+            }
+
+            public int getTopRank() {
+                return topRank;
+            }
+
+            public void setTopRank(int topRank) {
+                this.topRank = topRank;
+            }
+
+            public String getLastPid() {
+                return lastPid;
+            }
+
+            public void setLastPid(String lastPid) {
+                this.lastPid = lastPid;
             }
         }
 
