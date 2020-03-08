@@ -3,7 +3,6 @@ package com.brain2.demo.rests;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotEmpty;
@@ -19,7 +18,6 @@ import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -54,10 +52,15 @@ public class PostRest {
 
     @PutMapping
     @ResponseStatus(code = HttpStatus.OK)
-    public void setPost(@NotNull @RequestBody final Map<String, @NotNull Object> updates) {
+    public void setPost(@NotNull @RequestBody final Map<String, Object> updates) {
 
         System.out.println(updates);
         System.out.println(updates.get("topic"));
+
+        if (updates.get("correctPrecent") != null && updates.get("correctPrecent") instanceof Integer) {
+            var precent = (Integer) updates.get("correctPrecent");
+            updates.put("correctPrecent", (double) precent);
+        }
 
         final var post = new Post();
         post.setId(updates.get("id").toString());
@@ -74,7 +77,7 @@ public class PostRest {
 
     @PatchMapping
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void patchPost(@NotNull @NotEmpty @RequestBody final Map<String, @NotNull Object> updates,
+    public void patchPost(@NotNull @NotEmpty @RequestBody final Map<String, Object> updates,
             @NotNull @PathVariable(value = "id") final Long id) {
         final var post = postRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post not found"));
@@ -87,6 +90,12 @@ public class PostRest {
     public @NotNull Integer getRandomPostBetween(@NotNull @PathVariable(value = "topic") final String topic,
             @RequestParam("topRank") final int topRank) {
 
+        // try {
+        // Thread.sleep(1000);
+        // } catch (InterruptedException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
         System.out.println("last posts ids 1: " + lastReadPosts.getLastPostsIds().toString());
         Set<String> combinedSet = Sets.union(lastReadPosts.getLastPostsIds(), Set.of(lastReadPosts.getLastPid()));
         final var list = postRepo.findRandomsWithinCorrectRatio(topic, topRank, combinedSet);

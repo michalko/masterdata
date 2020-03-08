@@ -13,6 +13,9 @@ import org.springframework.util.ReflectionUtils;
 @Service
 public class MergeUpdatesService {
     public <T> void mergeUpdates(T object, Map<String, Object> updates) {
+
+
+        System.out.println("updates" + updates.toString());
         removeIDs(updates);
 
         updates.forEach((k, v) -> {
