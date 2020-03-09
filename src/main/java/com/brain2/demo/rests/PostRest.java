@@ -70,8 +70,6 @@ public class PostRest {
         updates.remove("topic");
         mergeUpdatesService.mergeUpdates(post, updates);
 
-        System.out.println(updates);
-        System.out.println(post);
         postRepo.save(post);
     }
 
@@ -90,36 +88,29 @@ public class PostRest {
     public @NotNull Integer getRandomPostBetween(@NotNull @PathVariable(value = "topic") final String topic,
             @RequestParam("topRank") final int topRank) {
 
-        // try {
-        // Thread.sleep(1000);
-        // } catch (InterruptedException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
         System.out.println("last posts ids 1: " + lastReadPosts.getLastPostsIds().toString());
         Set<String> combinedSet = Sets.union(lastReadPosts.getLastPostsIds(), Set.of(lastReadPosts.getLastPid()));
         final var list = postRepo.findRandomsWithinCorrectRatio(topic, topRank, combinedSet);
+
+        System.out.println("list 2: " + list.toString());
+
         final var listSize = list.size();
         if (lastReadPosts.getPostsNum() == 0 || Math.abs(lastReadPosts.getTopRank() - topRank) > 10) {
             lastReadPosts.setPostsNum(listSize);
             lastReadPosts.setTopRank(topRank);
         }
 
-        final var g = random.nextGaussian();
-        final var g1 = (listSize / 4) * (g);
-        final var g2 = g1 + (listSize / 2);
-        final var gauss = (int) (g2);
-        System.out.println("list 1 " + list.toString());
-        System.out.println("gauss " + gauss);
-        System.out.println("list 2 " + list.size());
-        final int gaussFinal = gauss < 0 || gauss >= listSize ? listSize / 2 : gauss;
-
-        final var postToReturn = list.get(gaussFinal);
+        final var gauss = nextPostIndex(listSize);
+        final var postToReturn = list.get(gauss);
         lastReadPosts.addPost(postToReturn.getId());
-
         lastReadPosts.setLastPid(postToReturn.getId());
-        System.out.println("last posts ids 2: " + lastReadPosts.getLastPostsIds().toString());
+        
         return postToReturn.getRealPostsInTopics();
+    }
+
+    private int nextPostIndex(final int listSize) {
+        final var gauss = (int) ((listSize / 4) * (random.nextGaussian()) + (listSize / 2));
+        return gauss < 0 || gauss >= listSize ? listSize / 2 : gauss;
     }
 
     @Configuration
@@ -179,6 +170,8 @@ public class PostRest {
             }
 
             public void setLastPid(String lastPid) {
+                
+                System.out.println("last posts ids 2: " + lastPid);
                 this.lastPid = lastPid;
             }
         }
