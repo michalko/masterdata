@@ -104,7 +104,7 @@ public class PostRest {
         final var postToReturn = list.get(gauss);
         lastReadPosts.addPost(postToReturn.getId());
         lastReadPosts.setLastPid(postToReturn.getId());
-        
+
         return postToReturn.getRealPostsInTopics();
     }
 
@@ -170,7 +170,7 @@ public class PostRest {
             }
 
             public void setLastPid(String lastPid) {
-                
+
                 System.out.println("last posts ids 2: " + lastPid);
                 this.lastPid = lastPid;
             }
