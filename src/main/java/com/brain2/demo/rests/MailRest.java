@@ -1,10 +1,7 @@
 package com.brain2.demo.rests;
 
-import java.util.List;
-
-import javax.validation.constraints.Email;
-
 import com.brain2.demo.Integration.IntegrationGateway;
+import com.brain2.demo.transport.MailRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,18 +23,7 @@ public class MailRest {
     @PostMapping
     @ResponseStatus(code = HttpStatus.OK)
     public void sentLinksMail(@RequestBody MailRequest mailRequest) {
-        System.out.println(mailRequest.toString());
-        integrationGateway.sendMessage(mailRequest.email);
+        integrationGateway.sendMessage(mailRequest);
     }
 }
 
-class MailRequest {
-    @Email
-    public String email;
-    public List<String> listOfLinks;
-
-    public MailRequest(@Email String email, List<String> listOfLinks) {
-        this.email = email;
-        this.listOfLinks = listOfLinks;
-    }
-}

@@ -1,5 +1,7 @@
 package com.brain2.demo.Integration;
 
+import com.brain2.demo.transport.MailRequest;
+
 import org.springframework.integration.annotation.Gateway;
 import org.springframework.integration.annotation.MessagingGateway;
 
@@ -7,6 +9,6 @@ import org.springframework.integration.annotation.MessagingGateway;
 public interface IntegrationGateway {
 
     @Gateway(requestChannel = "integration.request.channel")
-    public String sendMessage(String message);
+    public String sendMessage(MailRequest mailRequest);
 
 }
