@@ -7,8 +7,6 @@ import org.springframework.integration.annotation.MessagingGateway;
 
 @MessagingGateway
 public interface IntegrationGateway {
-
     @Gateway(requestChannel = "integration.request.channel")
     public String sendMessage(MailRequest mailRequest);
-
 }

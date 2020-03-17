@@ -83,16 +83,14 @@ public class PostRest {
         postRepo.save(post);
     }
 
+    // @Cacheable(value = "postsNearRank")
     @GetMapping(value = "/getRandomBetween/{topic}")
     @ResponseStatus(code = HttpStatus.OK)
     public @NotNull Integer getRandomPostBetween(@NotNull @PathVariable(value = "topic") final String topic,
             @RequestParam("topRank") final int topRank) {
 
-        System.out.println("last posts ids 1: " + lastReadPosts.getLastPostsIds().toString());
         Set<String> combinedSet = Sets.union(lastReadPosts.getLastPostsIds(), Set.of(lastReadPosts.getLastPid()));
         final var list = postRepo.findRandomsWithinCorrectRatio(topic, topRank, combinedSet);
-
-        System.out.println("list 2: " + list.toString());
 
         final var listSize = list.size();
         if (lastReadPosts.getPostsNum() == 0 || Math.abs(lastReadPosts.getTopRank() - topRank) > 10) {

@@ -21,8 +21,8 @@ public class IntegrationService {
     @ServiceActivator(inputChannel = "integration.request.channel", outputChannel = "my.mailSender")
     public MailMessage logMail(Message<MailRequest> message) {
         MailMessage mailMsg = new SimpleMailMessage();
-        mailMsg.setFrom(message.getPayload().email);
-        mailMsg.setTo("michal.lewandowski@gmail.com");
+        mailMsg.setFrom("michal.lewandowski@gmail.com");
+        mailMsg.setTo(message.getPayload().email);
         mailMsg.setSubject("Links to read - Brainmatter");
 
         StringBuilder textMessage = new StringBuilder("Links to skim thru: ").append(message.getPayload().listOfLinks)

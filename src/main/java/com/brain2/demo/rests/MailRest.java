@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/mail")
 @CrossOrigin(origins = { "http://localhost:3000", "https://brainmatter.xyz" })
 public class MailRest {
-
     @Autowired
     private IntegrationGateway integrationGateway;
 

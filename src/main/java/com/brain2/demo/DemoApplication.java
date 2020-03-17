@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
+// @EnableCaching
 public class DemoApplication {
 
 	private static final Logger log = LoggerFactory.getLogger(DemoApplication.class);
