@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class TopicTags {
 
   @EmbeddedId
+  @JsonIgnore
   TopicTagKey id;
 
   @ManyToOne
@@ -28,6 +29,16 @@ public class TopicTags {
   @MapsId("tag_id")
   @JoinColumn(name = "tag_id")
   Tag tag;
+
+  Long currentPosts;
+
+  public Long getCurrentPosts() {
+    return currentPosts;
+  }
+
+  public void setCurrentPosts(Long currentPosts) {
+    this.currentPosts = currentPosts;
+  }
 
   public TopicTagKey getId() {
     return id;
@@ -89,4 +100,5 @@ public class TopicTags {
     // standard constructors, getters, and setters
     // hashcode and equals implementation
   }
+
 }
