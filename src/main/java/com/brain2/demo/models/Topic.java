@@ -21,7 +21,6 @@ public class Topic {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-
   @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
   @JsonManagedReference
   private Set<TopicTags> tags;
@@ -33,7 +32,6 @@ public class Topic {
 
   @NotNull
   private Integer activeCurrently;
-  
 
   public String getName() {
     return name;
@@ -50,7 +48,6 @@ public class Topic {
   public void setId(Long id) {
     this.id = id;
   }
-
 
   public String getSection() {
     return section;
@@ -75,6 +72,7 @@ public class Topic {
   public void setTags(List<TopicTags> tags) {
     this.tags = Sets.newHashSet(tags);
   }
+
   public void setTags(Set<TopicTags> tags) {
     this.tags = tags;
   }

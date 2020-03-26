@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class TopicTags {
 
@@ -19,6 +21,7 @@ public class TopicTags {
   @ManyToOne
   @MapsId("topic_id")
   @JoinColumn(name = "topic_id")
+  @JsonIgnore
   Topic topic;
 
   @ManyToOne

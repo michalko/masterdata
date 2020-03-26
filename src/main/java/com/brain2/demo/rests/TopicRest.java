@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import com.brain2.demo.models.Topic;
-import com.brain2.demo.models.Topicsections;
 import com.brain2.demo.models.TopicTags;
+import com.brain2.demo.models.Topicsections;
 import com.brain2.demo.repos.SectionRepo;
 import com.brain2.demo.repos.TopicRepo;
 import com.brain2.demo.repos.TopicTagsRepo;
+import com.google.common.collect.Iterables;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

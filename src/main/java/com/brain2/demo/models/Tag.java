@@ -10,19 +10,18 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import lombok.NoArgsConstructor;
 
 @Entity
 public class Tag {
 
   @ManyToMany
-  @JsonManagedReference
+  @JsonIgnore
   private Set<Post> posts;
 
   @OneToMany(mappedBy = "tag")
-  @JsonManagedReference
+  @JsonIgnore
   private Set<TopicTags> topics;
 
   @Id
