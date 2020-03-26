@@ -1,61 +1,89 @@
 package com.brain2.demo.models;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.MapsId;
 
 @Entity
-public class Topictags {
+public class TopicTags {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @JsonIgnore
-  private Integer id;
+  @EmbeddedId
+  TopicTagKey id;
 
-  @NotNull
-  private String name;
-
-  @NotNull
   @ManyToOne
-  @JoinColumn(name="topic_id")
-  @JsonBackReference
-  private Topic topic;
+  @MapsId("topic_id")
+  @JoinColumn(name = "topic_id")
+  Topic topic;
 
-  public Integer getId() {
+  @ManyToOne
+  @MapsId("tag_id")
+  @JoinColumn(name = "tag_id")
+  Tag tag;
+
+  public TopicTagKey getId() {
     return id;
   }
 
-  public void setId(final Integer id) {
+  public void setId(TopicTagKey id) {
     this.id = id;
   }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(final String name) {
-    this.name = name;
-  }
-
 
   public Topic getTopic() {
     return topic;
   }
 
-  public void setTopic(final Topic topic) {
+  public void setTopic(Topic topic) {
     this.topic = topic;
   }
 
-@Override
-public String toString() {
-	return "Topictags [id=" + id + ", name=" + name + ", topic=" + topic + "]";
-}
+  public Tag getTag() {
+    return tag;
+  }
 
+  public void setTag(Tag tag) {
+    this.tag = tag;
+  }
+
+  @Embeddable
+  public static class TopicTagKey implements Serializable {
+    private static final long serialVersionUID = 4285788116889366644L;
+
+    static public TopicTagKey newTopicTagKey(Long topicId, Long tagId) {
+      var topicTagKey = new TopicTagKey();
+      topicTagKey.setTagId(tagId);
+      topicTagKey.setTopicId(topicId);
+      return topicTagKey;
+    }
+
+    @Column(name = "topic_id")
+    Long topicId;
+
+    @Column(name = "tag_id")
+    Long tagId;
+
+    public Long getTopicId() {
+      return topicId;
+    }
+
+    public void setTopicId(Long topicId) {
+      this.topicId = topicId;
+    }
+
+    public Long getTagId() {
+      return tagId;
+    }
+
+    public void setTagId(Long tagId) {
+      this.tagId = tagId;
+    }
+
+    // standard constructors, getters, and setters
+    // hashcode and equals implementation
+  }
 }

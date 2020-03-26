@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.brain2.demo.models.Topic;
 import com.brain2.demo.models.Topicsections;
-import com.brain2.demo.models.Topictags;
+import com.brain2.demo.models.TopicTags;
 import com.brain2.demo.repos.SectionRepo;
 import com.brain2.demo.repos.TopicRepo;
 import com.brain2.demo.repos.TopicTagsRepo;
@@ -42,7 +42,9 @@ public class TopicRest {
 
     @GetMapping
     public Iterable<Topic> getAll() {
-        return topicRepo.findAll();
+        Iterable<Topic> findAll = topicRepo.findAll();
+        System.out.println(findAll.iterator().next());
+        return findAll;
     }
 
     @GetMapping("/get/{id}")
@@ -51,12 +53,12 @@ public class TopicRest {
     }
 
     @GetMapping("/topicsWithTags")
-    public Iterable<Topictags> getTopicsWithTags() {
+    public Iterable<TopicTags> getTopicsWithTags() {
         return topicTagsRepo.findAll();
     }
 
     @GetMapping("/topicsWithTagsFor")
-    public List<Topictags> getTopicsWithTagsFor() {
+    public List<TopicTags> getTopicsWithTagsFor() {
         return topicTagsRepo.findByTopic_Name("Java");
     }
 

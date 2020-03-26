@@ -13,7 +13,7 @@ import org.springframework.util.ReflectionUtils;
 @Service
 public class UserService {
     @Autowired
-    MergeUpdatesService mergeUpdatesService;
+    MergePrimitiveUpdatesService mergeUpdatesService;
     @Autowired
     UserRepo userRepo;
 

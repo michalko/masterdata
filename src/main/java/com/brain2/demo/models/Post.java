@@ -1,10 +1,18 @@
 package com.brain2.demo.models;
 
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Post {
@@ -12,8 +20,12 @@ public class Post {
   @Id
   private String id;
 
-  @NotNull
-  private Double correctPrecent;
+  @ManyToMany(cascade = CascadeType.ALL)
+  @JoinTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
+  @JsonManagedReference
+  private List<Tag> tags;
+
+  private Double correctPrecent = 0.0;
 
   @NotNull
   @ManyToOne
@@ -22,9 +34,6 @@ public class Post {
 
   @NotNull
   private Integer realPostsInTopics;
-
-  @NotNull
-  private String topicName;
 
   public Integer getRealPostsInTopics() {
     return realPostsInTopics;
@@ -64,12 +73,12 @@ public class Post {
     this.correctPrecent = correctPrecent;
   }
 
-  public String getTopicName() {
-    return topicName;
+  public List<Tag> getTags() {
+    return tags;
   }
 
-  public void setTopicName(String topicName) {
-    this.topicName = topicName;
+  public void setTags(List<Tag> tags) {
+    this.tags = tags;
   }
 
 }

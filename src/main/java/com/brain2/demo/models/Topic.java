@@ -1,6 +1,7 @@
 package com.brain2.demo.models;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.google.common.collect.Sets;
 
 @Entity
 public class Topic {
@@ -19,9 +21,10 @@ public class Topic {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
+
   @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
   @JsonManagedReference
-  private List<Topictags> tags;
+  private Set<TopicTags> tags;
 
   private String section;
 
@@ -40,11 +43,6 @@ public class Topic {
     this.name = name;
   }
 
-  @Override
-  public String toString() {
-    return "Topic [id=" + id + ", name=" + name + "]";
-  }
-
   public Long getId() {
     return id;
   }
@@ -53,13 +51,6 @@ public class Topic {
     this.id = id;
   }
 
-  public List<Topictags> getTags() {
-    return tags;
-  }
-
-  public void setTags(List<Topictags> tags) {
-    this.tags = tags;
-  }
 
   public String getSection() {
     return section;
@@ -76,4 +67,22 @@ public class Topic {
   public void setActiveCurrently(Integer activeCurrently) {
     this.activeCurrently = activeCurrently;
   }
+
+  public Set<TopicTags> getTags() {
+    return tags;
+  }
+
+  public void setTags(List<TopicTags> tags) {
+    this.tags = Sets.newHashSet(tags);
+  }
+  public void setTags(Set<TopicTags> tags) {
+    this.tags = tags;
+  }
+
+  @Override
+  public String toString() {
+    return "Topic [activeCurrently=" + activeCurrently + ", id=" + id + ", name=" + name + ", section=" + section
+        + ", tags=" + tags + "]";
+  }
+
 }
