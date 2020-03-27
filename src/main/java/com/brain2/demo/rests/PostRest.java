@@ -47,7 +47,10 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/posts")
 @CrossOrigin(origins = { "http://localhost:3000", "https://brainmatter.xyz" })
 public class PostRest {
-    Random random = new Random();
+    static Random random = new Random();
+
+    @Resource(name = "lastReadPosts")
+    com.brain2.demo.rests.PostRest.MyConfiguration.LastReadPosts lastReadPosts;
 
     @Autowired
     TopicService topicService;
@@ -62,22 +65,20 @@ public class PostRest {
     @Autowired
     TopicTagsRepo topicTagsRepo;
 
-    @Resource(name = "lastReadPosts")
-    com.brain2.demo.rests.PostRest.MyConfiguration.LastReadPosts lastReadPosts;
-
     @PostMapping
-    public Post createPost(@NotNull @NotEmpty @RequestBody final PostTransport postTransport) {
+    public Post addNewPost(@NotNull @NotEmpty @RequestBody final PostTransport postTransport) {
         final var post = new Post();
         topicRepo.findById(postTransport.topicID()).map(topic -> {
+            topic.setCurrentPosts(topic.getCurrentPosts() + 1);
             post.setTopic(topic);
             return post;
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Topic not found"));
 
         if (!postTransport.tags().isEmpty()) {
             final List<String> tags = postTransport.tags();
-            final List<Tag> tagsList = new ArrayList<Tag>();
+            final var tagsList = new ArrayList<Tag>();
             tags.forEach(tagName -> {
-                var tag = tagRepo.findByName(tagName).orElseGet(() -> tagRepo.save(new Tag(tagName)));
+                final var tag = tagRepo.findByName(tagName).orElseGet(() -> tagRepo.save(new Tag(tagName)));
                 tagsList.add(tag);
                 topicService.addTopicTag(postTransport, post, tag);
             });
@@ -86,6 +87,7 @@ public class PostRest {
         post.setId(postTransport.id());
         post.setRealPostsInTopics(postTransport.realPostsInTopics());
 
+        System.out.println("saving" + post);
         return postRepo.save(post);
     }
 
@@ -125,7 +127,7 @@ public class PostRest {
 
     @PutMapping
     @ResponseStatus(code = HttpStatus.OK)
-    public void setPost(@NotNull @RequestBody final Map<String, Object> updates) {
+    public void updatePost(@NotNull @RequestBody final Map<String, Object> updates) {
         System.out.println(updates);
         System.out.println(updates.get("topic"));
 

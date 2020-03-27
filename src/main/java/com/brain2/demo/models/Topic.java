@@ -20,7 +20,6 @@ public class Topic {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @JsonIgnore
   private Long id;
 
   @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
@@ -34,6 +33,17 @@ public class Topic {
 
   @NotNull
   private Integer activeCurrently;
+
+  @NotNull
+  Long currentPosts = 0l;
+
+  public Long getCurrentPosts() {
+    return currentPosts;
+  }
+
+  public void setCurrentPosts(Long currentPosts) {
+    this.currentPosts = currentPosts;
+  }
 
   public String getName() {
     return name;
@@ -81,8 +91,8 @@ public class Topic {
 
   @Override
   public String toString() {
-    return "Topic [activeCurrently=" + activeCurrently + ", id=" + id + ", name=" + name + ", section=" + section
-        + ", tags=" + tags + "]";
+    return "Topic [activeCurrently=" + activeCurrently + ", currentPosts=" + currentPosts + ", id=" + id + ", name="
+        + name + ", section=" + section + ", tags=" + tags + "]";
   }
 
 }

@@ -30,7 +30,7 @@ public class TopicTags {
   @JoinColumn(name = "tag_id")
   Tag tag;
 
-  Long currentPosts;
+  Long currentPosts = 0l;
 
   public Long getCurrentPosts() {
     return currentPosts;

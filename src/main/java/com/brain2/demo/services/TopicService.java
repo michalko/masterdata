@@ -19,10 +19,14 @@ public class TopicService {
     TopicTagsRepo topicTagsRepo;
 
     public void addTopicTag(final PostTransport postTransport, final Post post, Tag tag) {
-        topicTagsRepo.findByTag_IdAndTopic_Id(tag.getId(), postTransport.topicID()).orElseGet(() -> {
+        topicTagsRepo.findByTag_IdAndTopic_Id(tag.getId(), postTransport.topicID()).map(topicTag -> {
+            topicTag.setCurrentPosts(topicTag.getCurrentPosts() + 1);
+            return topicTagsRepo.save(topicTag);
+        }).orElseGet(() -> {
             final TopicTags topicTag = new TopicTags();
             topicTag.setTag(tag);
             topicTag.setTopic(post.getTopic());
+            topicTag.setCurrentPosts(topicTag.getCurrentPosts() + 1);
             topicTag.setId(TopicTagKey.newTopicTagKey(post.getTopic().getId(), tag.getId()));
             return topicTagsRepo.save(topicTag);
         });
