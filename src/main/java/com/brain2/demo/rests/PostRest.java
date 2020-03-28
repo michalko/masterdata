@@ -47,11 +47,6 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/posts")
 @CrossOrigin(origins = { "http://localhost:3000", "https://brainmatter.xyz" })
 public class PostRest {
-    static Random random = new Random();
-
-    @Resource(name = "lastReadPosts")
-    com.brain2.demo.rests.PostRest.MyConfiguration.LastReadPosts lastReadPosts;
-
     @Autowired
     TopicService topicService;
     @Autowired
@@ -151,97 +146,5 @@ public class PostRest {
         postRepo.save(post);
     }
 
-    // @Cacheable(value = "postsNearRank")
-    @GetMapping(value = "/getRandomBetween/{topic}")
-    @ResponseStatus(code = HttpStatus.OK)
-    public @NotNull Integer getRandomPostBetween(@NotNull @PathVariable(value = "topic") final String topic,
-            @RequestParam("topRank") final int topRank) {
-
-        final Set<String> combinedSet = Sets.union(lastReadPosts.getLastPostsIds(), Set.of(lastReadPosts.getLastPid()));
-        final var list = postRepo.findRandomsWithinCorrectRatio(topic, topRank, combinedSet);
-
-        final var listSize = list.size();
-        if (lastReadPosts.getPostsNum() == 0 || Math.abs(lastReadPosts.getTopRank() - topRank) > 10) {
-            lastReadPosts.setPostsNum(listSize);
-            lastReadPosts.setTopRank(topRank);
-        }
-
-        final var gauss = nextPostIndex(listSize);
-        final var postToReturn = list.get(gauss);
-        lastReadPosts.addPost(postToReturn.getId());
-        lastReadPosts.setLastPid(postToReturn.getId());
-
-        return postToReturn.getRealPostsInTopics();
-    }
-
-    private int nextPostIndex(final int listSize) {
-        final var gauss = (int) ((listSize / 4) * (random.nextGaussian()) + (listSize / 2));
-        return gauss < 0 || gauss >= listSize ? listSize / 2 : gauss;
-    }
-
-    @Configuration
-    public class MyConfiguration {
-
-        @Bean
-        @SessionScope
-        public LastReadPosts lastReadPosts() {
-            return new LastReadPosts();
-        }
-
-        @Component
-        public class LastReadPosts {
-            private final Set<String> lastPosts;
-            private int postsNum;
-            private int topRank;
-            private String lastPid = "0";
-
-            LastReadPosts() {
-                lastPosts = Sets.newHashSet("1");
-            }
-
-            void clear() {
-                lastPosts.clear();
-                postsNum = 0;
-            }
-
-            Set<String> getLastPostsIds() {
-                return lastPosts;
-            }
-
-            void addPost(final String pid) {
-                lastPosts.add(pid);
-                if (lastPosts.size() > (postsNum / 2)) {
-                    clear();
-                }
-            }
-
-            public int getPostsNum() {
-                return postsNum;
-            }
-
-            public void setPostsNum(final int postsNum) {
-                this.postsNum = postsNum;
-            }
-
-            public int getTopRank() {
-                return topRank;
-            }
-
-            public void setTopRank(final int topRank) {
-                this.topRank = topRank;
-            }
-
-            public String getLastPid() {
-                return lastPid;
-            }
-
-            public void setLastPid(final String lastPid) {
-
-                System.out.println("last posts ids 2: " + lastPid);
-                this.lastPid = lastPid;
-            }
-        }
-
-    }
 
 }
