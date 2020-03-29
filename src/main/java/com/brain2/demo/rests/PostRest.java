@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 
 import com.brain2.demo.models.Post;
 import com.brain2.demo.models.Tag;
+import com.brain2.demo.models.TopicTags;
 import com.brain2.demo.records.PostTransport;
 import com.brain2.demo.repos.PostRepo;
 import com.brain2.demo.repos.TagRepo;
@@ -51,23 +52,21 @@ public class PostRest {
 
     @DeleteMapping
     public void deletePost(@NotNull @NotEmpty @RequestBody final PostTransport postTransport) {
-
-        System.out.println("deleting post");
-        System.out.println("id" + postTransport.id());
         final var post = postRepo.findById(postTransport.id())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post not found"));
-
         final var topic = post.getTopic();
         final var currentPosts = topic.getCurrentPosts() - 1;
+        System.out.println("deleting tag from post  ");
+        System.out.println(topic);
+        topicService.decreatePostCountForTagInThisTopic(topic.getId(), post.getTags());
+
         if (currentPosts == 0) {
             topicRepo.delete(topic);
         } else {
             topic.setCurrentPosts(currentPosts);
             topicRepo.save(topic);
         }
-
         postRepo.delete(post);
-
     }
 
     @PostMapping

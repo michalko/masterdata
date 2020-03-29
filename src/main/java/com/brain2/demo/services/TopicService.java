@@ -1,7 +1,11 @@
 package com.brain2.demo.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.brain2.demo.models.Post;
 import com.brain2.demo.models.Tag;
+import com.brain2.demo.models.Topic;
 import com.brain2.demo.models.TopicTags;
 import com.brain2.demo.models.TopicTags.TopicTagKey;
 import com.brain2.demo.records.PostTransport;
@@ -18,6 +22,11 @@ public class TopicService {
     @Autowired
     TopicTagsRepo topicTagsRepo;
 
+    public void decreatePostCountForTagInThisTopic(Long topicId, List<Tag> tags) {
+        topicTagsRepo.decrementActivePostsForThisTopicTags(topicId,
+                tags.stream().map(Tag::getId).collect(Collectors.toList()));
+    }
+
     public void addTopicTag(final PostTransport postTransport, final Post post, Tag tag) {
         topicTagsRepo.findByTag_IdAndTopic_Id(tag.getId(), postTransport.topicID()).map(topicTag -> {
             topicTag.setCurrentPosts(topicTag.getCurrentPosts() + 1);
@@ -31,5 +40,4 @@ public class TopicService {
             return topicTagsRepo.save(topicTag);
         });
     }
-
 }
