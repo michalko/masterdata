@@ -3,18 +3,13 @@ package com.brain2.demo.rests;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.annotation.Resource;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.brain2.demo.models.Post;
 import com.brain2.demo.models.Tag;
-import com.brain2.demo.models.TopicTags;
-import com.brain2.demo.models.TopicTags.TopicTagKey;
 import com.brain2.demo.records.PostTransport;
 import com.brain2.demo.repos.PostRepo;
 import com.brain2.demo.repos.TagRepo;
@@ -22,25 +17,19 @@ import com.brain2.demo.repos.TopicRepo;
 import com.brain2.demo.repos.TopicTagsRepo;
 import com.brain2.demo.services.MergePrimitiveUpdatesService;
 import com.brain2.demo.services.TopicService;
-import com.google.common.collect.Sets;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -59,6 +48,27 @@ public class PostRest {
     TagRepo tagRepo;
     @Autowired
     TopicTagsRepo topicTagsRepo;
+
+    @DeleteMapping
+    public void deletePost(@NotNull @NotEmpty @RequestBody final PostTransport postTransport) {
+
+        System.out.println("deleting post");
+        System.out.println("id" + postTransport.id());
+        final var post = postRepo.findById(postTransport.id())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post not found"));
+
+        final var topic = post.getTopic();
+        final var currentPosts = topic.getCurrentPosts() - 1;
+        if (currentPosts == 0) {
+            topicRepo.delete(topic);
+        } else {
+            topic.setCurrentPosts(currentPosts);
+            topicRepo.save(topic);
+        }
+
+        postRepo.delete(post);
+
+    }
 
     @PostMapping
     public Post addNewPost(@NotNull @NotEmpty @RequestBody final PostTransport postTransport) {
@@ -145,6 +155,5 @@ public class PostRest {
 
         postRepo.save(post);
     }
-
 
 }

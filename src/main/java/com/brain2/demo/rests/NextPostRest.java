@@ -41,11 +41,8 @@ public class NextPostRest {
     @ResponseStatus(code = HttpStatus.OK)
     public @NotNull Integer getNextPost(@NotNull @PathVariable(value = "topic") final String topic,
             @RequestParam("sub") final Optional<String> sub, @RequestParam("topRank") final int topRank) {
-
         final var postsToOmit = Sets.union(lastReadPosts.getLastPostsIds(), Set.of(lastReadPosts.getLastPid()));
-
         final var list = nextPostService.getNextPost(topic, sub, topRank, postsToOmit);
-
         final var listSize = list.size();
         if (lastReadPosts.getPostsNum() == 0 || Math.abs(lastReadPosts.getTopRank() - topRank) > 10) {
             lastReadPosts.setPostsNum(listSize);
@@ -68,7 +65,6 @@ public class NextPostRest {
 
     @Configuration
     public class MyConfiguration {
-
         @Bean
         @SessionScope
         public LastReadPosts lastReadPosts() {

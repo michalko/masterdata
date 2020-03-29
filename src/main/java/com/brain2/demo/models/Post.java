@@ -1,7 +1,7 @@
 package com.brain2.demo.models;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 public class Post {
@@ -34,6 +36,9 @@ public class Post {
 
   @NotNull
   private Integer realPostsInTopics;
+
+  @CreationTimestamp
+  private LocalDateTime createDateTime;
 
   public Integer getRealPostsInTopics() {
     return realPostsInTopics;
