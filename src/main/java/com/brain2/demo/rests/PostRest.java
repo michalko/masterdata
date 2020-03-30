@@ -55,17 +55,14 @@ public class PostRest {
         final var post = postRepo.findById(postTransport.id())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post not found"));
         final var topic = post.getTopic();
-        final var currentPosts = topic.getCurrentPosts() - 1;
-        System.out.println("deleting tag from post  ");
-        System.out.println(topic);
         topicService.decreatePostCountForTagInThisTopic(topic.getId(), post.getTags());
 
-        if (currentPosts == 0) {
-            topicRepo.delete(topic);
-        } else {
-            topic.setCurrentPosts(currentPosts);
+        if (topic.getCurrentPosts() > 0) {
+            // topicRepo.delete(topic);
+            topic.setCurrentPosts(topic.getCurrentPosts() - 1);
             topicRepo.save(topic);
         }
+
         postRepo.delete(post);
     }
 

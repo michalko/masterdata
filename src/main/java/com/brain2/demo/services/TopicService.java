@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import com.brain2.demo.models.Post;
 import com.brain2.demo.models.Tag;
-import com.brain2.demo.models.Topic;
 import com.brain2.demo.models.TopicTags;
 import com.brain2.demo.models.TopicTags.TopicTagKey;
 import com.brain2.demo.records.PostTransport;

@@ -35,9 +35,9 @@ public class DemoApplication {
 	@Bean
 	public CommandLineRunner demo(TopicRepo repository, TopicTagsRepo repository2) {
 		return (args) -> {
-			topicRepo.findAll().forEach(systout());
-			Iterables.limit(topicRepo.findAll(), 10).forEach(systout());
-			Iterables.limit(postRepo.findAll(), 10).forEach(systout());
+			// topicRepo.findAll().forEach(systout());
+			// Iterables.limit(topicRepo.findAll(), 10).forEach(systout());
+			// Iterables.limit(postRepo.findAll(), 10).forEach(systout());
 		};
 	}
 

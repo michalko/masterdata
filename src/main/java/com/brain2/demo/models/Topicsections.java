@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Where;
+
 @Entity
 public class Topicsections {
 
@@ -26,16 +28,16 @@ public class Topicsections {
     this.name = name;
   }
 
-  @Override
-  public String toString() {
-    return "Topic [name=" + name + "]";
-  }
-
   public List<Topic> getTopics() {
     return topics;
   }
 
   public void setTopics(List<Topic> topics) {
     this.topics = topics;
+  }
+
+  @Override
+  public String toString() {
+    return "Topicsections [name=" + name + ", topics=" + topics + "]";
   }
 }

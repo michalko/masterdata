@@ -44,7 +44,6 @@ public class TopicRest {
     @GetMapping
     public Iterable<Topic> getAll() {
         Iterable<Topic> findAll = topicRepo.findAll();
-        System.out.println(findAll.iterator().next());
         return findAll;
     }
 
