@@ -9,7 +9,6 @@ import com.brain1.masterdata.models.Topicsections;
 import com.brain1.masterdata.repos.SectionRepo;
 import com.brain1.masterdata.repos.TopicRepo;
 import com.brain1.masterdata.repos.TopicTagsRepo;
-import com.google.common.collect.Iterables;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
