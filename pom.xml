@@ -7,10 +7,10 @@
 		<version>2.2.2.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.brain2</groupId>
-	<artifactId>demo</artifactId>
+	<groupId>com.brain1</groupId>
+	<artifactId>masterdata</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
+	<name>masterdata</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -104,6 +104,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+			<version>2.2.2.RELEASE</version>
 		</dependency>
 	</dependencies>
 
