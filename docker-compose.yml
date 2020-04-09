@@ -1,8 +1,8 @@
-version: '2.1'
+version: '3'
 
 services:
   demo:
-    image: rustytrombone/brain1:1.0
+    image: brain1/core:1.0
     build: .
     ports:
       - 3000:3000
