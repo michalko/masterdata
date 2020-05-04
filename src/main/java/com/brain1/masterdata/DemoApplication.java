@@ -2,7 +2,7 @@ package com.brain1.masterdata;
 
 import java.util.function.Consumer;
 
-import com.brain1.masterdata.repos.PostRepo;
+import com.brain1.masterdata.repos.TagRepo;
 import com.brain1.masterdata.repos.TopicRepo;
 import com.brain1.masterdata.repos.TopicTagsRepo;
 
@@ -25,23 +25,12 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
-	@Autowired
-	TopicRepo topicRepo;
-
-	@Autowired
-	PostRepo postRepo;
-
 	@Bean
-	public CommandLineRunner demo(TopicRepo repository, TopicTagsRepo repository2) {
+	public CommandLineRunner demo(TagRepo tagRepo) {
 		return (args) -> {
-			// topicRepo.findAll().forEach(systout());
-			// Iterables.limit(topicRepo.findAll(), 10).forEach(systout());
-			// Iterables.limit(postRepo.findAll(), 10).forEach(systout());
+			tagRepo.findByTopicsTopicName("Java").forEach(tag -> System.out.println(tag.getName()));
 		};
 	}
 
-	private Consumer<? super Object> systout() {
-		return o -> System.out.println(o);
-	}
 
 }
