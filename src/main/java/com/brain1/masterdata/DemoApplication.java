@@ -28,7 +28,7 @@ public class DemoApplication {
 	@Bean
 	public CommandLineRunner demo(TagRepo tagRepo) {
 		return (args) -> {
-			tagRepo.findByTopicsTopicName("Java").forEach(tag -> System.out.println(tag.getId()));
+			tagRepo.findByTopicsTopicName("").forEach(tag -> System.out.println(tag.getId()));
 		};
 	}
 
