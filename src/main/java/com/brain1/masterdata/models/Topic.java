@@ -1,5 +1,6 @@
 package com.brain1.masterdata.models;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +17,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.google.common.collect.Sets;
 
 @Entity
-public class Topic {
+public class Topic implements Serializable {
+  /**
+   *
+   */
+  private static final long serialVersionUID = -8287344759213445790L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,4 +1,4 @@
 package com.brain1.masterdata.records;
 
-public record WronglyAnsweredRecord(String uid, String pid, String topic) {
+public record WronglyAnsweredRecord(String uid, String pid, String topic, Integer answeredWronglyTimes, Boolean inc) {
 }
