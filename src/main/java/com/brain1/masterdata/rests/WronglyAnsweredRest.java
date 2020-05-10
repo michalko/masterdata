@@ -46,6 +46,11 @@ public class WronglyAnsweredRest {
         System.out.println(uid);
         return wronglyAnsweredRepo.findAllByUserFirebaseId(uid);
     }
+    
+    @GetMapping("/count/{uid}")
+    public int countForUser(@PathVariable @Nonnull String uid) {
+        return wronglyAnsweredRepo.findAllByUserFirebaseId(uid).size();
+    }
 
     @PostMapping("/{uid}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
