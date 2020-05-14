@@ -50,7 +50,6 @@ public class WronglyAnsweredService {
 
     private void increment(@Nonnull final WronglyAnswered updated) {
         updated.setAnsweredWronglyTimes(updated.getAnsweredWronglyTimes() + 1);
-        System.out.println(updated);
         wronglyAnsweredRepo.save(updated);
     }
 
