@@ -44,10 +44,11 @@ public class WronglyAnsweredRest {
     @Autowired
     WronglyAnsweredService wronglyAnsweredService;
 
-    @GetMapping("/{uid}")
-    public List<WronglyAnsweredRecordToCore> getAllForUser(@PathVariable @Nonnull String uid) {
-        System.out.println("get wrongly for user" + uid);
-        return wronglyAnsweredRepo.findAllByUserFirebaseId(uid).stream()
+    @GetMapping("/{uid}/{topic}")
+    public List<WronglyAnsweredRecordToCore> getAllForUser(@PathVariable @Nonnull String uid,
+            @PathVariable @Nonnull String topic) {
+        System.out.println("get wrongly for user" + uid + " topic " + topic);
+        return wronglyAnsweredRepo.findAllByUserFirebaseIdAndTopicName(uid, topic).stream()
                 .map(wae -> new WronglyAnsweredRecordToCore(wae.getTopic().getName(),
                         wae.getPost().getRealPostsInTopics(), wae.getPost().getId()))
                 .collect(Collectors.toList());

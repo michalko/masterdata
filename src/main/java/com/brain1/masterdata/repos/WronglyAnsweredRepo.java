@@ -11,5 +11,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface WronglyAnsweredRepo extends CrudRepository<WronglyAnswered, Long> {
     List<WronglyAnswered> findAllByUserFirebaseId(@Nonnull String uid);
+    List<WronglyAnswered> findAllByUserFirebaseIdAndTopicName(@Nonnull String uid, @Nonnull String topic);
     Optional<WronglyAnswered> findAllByUserFirebaseIdAndPostId(@Nonnull String uid, @Nonnull String pid);
 }
