@@ -1,11 +1,11 @@
 package com.brain1.masterdata.rests;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
-import javax.swing.UIDefaults;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -54,6 +54,26 @@ public class WronglyAnsweredRest {
                 .collect(Collectors.toList());
     }
 
+    record WronglyAnsweredRecordToCore(String topic, Integer realId, String pid) implements Serializable {
+
+        private static final long serialVersionUID = 9157966109804107492L;
+        public String getTopic() {
+            return topic;
+        }
+
+        public Integer getRealId() {
+            return realId;
+        }
+
+        public String getPid() {
+            return pid;
+        }
+
+        public static long getSerialversionuid() {
+            return serialVersionUID;
+        }
+    }
+
     @GetMapping("/count/{uid}")
     public int countForUser(@PathVariable @Nonnull String uid) {
         return wronglyAnsweredRepo.findAllByUserFirebaseId(uid).size();
@@ -70,21 +90,5 @@ public class WronglyAnsweredRest {
     private WronglyAnswered getWronglyAnsweredEntity(@Nonnull final WronglyAnsweredRecord war) {
         return wronglyAnsweredRepo.findAllByUserFirebaseIdAndPostId(war.uid(), war.pid())
                 .orElseGet(() -> wronglyAnsweredService.addNew(war));
-    }
-
-    record WronglyAnsweredRecordToCore(String topic, Integer realId, String pid) implements Serializable {
-
-        private static final long serialVersionUID = 9157966109804107492L;
-        public String getTopic() {
-            return topic;
-        }
-
-        public Integer getRealId() {
-            return realId;
-        }
-
-        public String getPid() {
-            return pid;
-        }
     }
 }
