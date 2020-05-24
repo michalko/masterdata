@@ -10,13 +10,13 @@ import javax.validation.constraints.NotNull;
 
 import com.brain1.masterdata.models.Post;
 import com.brain1.masterdata.models.Tag;
-import com.brain1.masterdata.models.TopicTags;
 import com.brain1.masterdata.records.PostTransport;
 import com.brain1.masterdata.repos.PostRepo;
 import com.brain1.masterdata.repos.TagRepo;
 import com.brain1.masterdata.repos.TopicRepo;
 import com.brain1.masterdata.repos.TopicTagsRepo;
 import com.brain1.masterdata.services.MergePrimitiveUpdatesService;
+import com.brain1.masterdata.services.PostService;
 import com.brain1.masterdata.services.TopicService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +39,8 @@ import org.springframework.web.server.ResponseStatusException;
 public class PostRest {
     @Autowired
     TopicService topicService;
+    @Autowired
+    PostService postService;
     @Autowired
     MergePrimitiveUpdatesService mergeUpdatesService;
     @Autowired
@@ -75,15 +77,10 @@ public class PostRest {
             return post;
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Topic not found"));
 
+        System.out.println("tags" + postTransport.tags().toString());
         if (!postTransport.tags().isEmpty()) {
             final List<String> tags = postTransport.tags();
-            final var tagsList = new ArrayList<Tag>();
-            tags.forEach(tagName -> {
-                final var tag = tagRepo.findByName(tagName).orElseGet(() -> tagRepo.save(new Tag(tagName)));
-                tagsList.add(tag);
-                topicService.addTopicTag(postTransport, post, tag);
-            });
-            post.setTags(tagsList);
+            postService.updateTagsInDb(post, postTransport.topicID(), tags);
         }
         post.setId(postTransport.id());
         post.setRealPostsInTopics(postTransport.realPostsInTopics());
@@ -99,8 +96,8 @@ public class PostRest {
         final var post = postRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post not found"));
 
+        final Long topicID = Long.valueOf((Integer) updates.get("topic"));
         if (updates.get("topic") != null) {
-            final Long topicID = Long.valueOf((Integer) updates.get("topic"));
             if (post.getTopic().getId() != topicID) {
                 topicRepo.findById(topicID).map(topic -> {
                     post.setTopic(topic);
@@ -111,13 +108,9 @@ public class PostRest {
         }
 
         if (updates.get("tags") != null) {
-            final List<String> tags = (ArrayList) updates.get("tags");
+            final List<String> tags = (List) updates.get("tags");
             if (!post.getTags().stream().map(Tag::getName).collect(Collectors.toList()).equals(tags)) {
-                final List<Tag> tagsList = new ArrayList<Tag>();
-                tags.forEach(tagName -> {
-                    tagsList.add(tagRepo.findByName(tagName).orElseGet(() -> tagRepo.save(new Tag(tagName))));
-                });
-                post.setTags(tagsList);
+                postService.updateTagsInDb(post, topicID, tags);
             }
             updates.remove("tags");
         }

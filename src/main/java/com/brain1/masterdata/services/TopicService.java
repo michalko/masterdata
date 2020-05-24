@@ -26,11 +26,15 @@ public class TopicService {
                 tags.stream().map(Tag::getId).collect(Collectors.toList()));
     }
 
-    public void addTopicTag(final PostTransport postTransport, final Post post, Tag tag) {
-        topicTagsRepo.findByTag_IdAndTopic_Id(tag.getId(), postTransport.topicID()).map(topicTag -> {
+    public void addTopicTag(final long topicId, final Post post, Tag tag) {
+
+        System.out.format("adding topic tags", tag, topicId, "%n");
+        topicTagsRepo.findByTag_IdAndTopic_Id(tag.getId(), topicId).map(topicTag -> {
+            System.out.format("found adding count to " + topicTag.getCurrentPosts() + 1);
             topicTag.setCurrentPosts(topicTag.getCurrentPosts() + 1);
             return topicTagsRepo.save(topicTag);
         }).orElseGet(() -> {
+            System.out.format("not found, adding new one " + tag + " " + post.getTopic()+ " " + post.getTopic().getId()+ " " + tag.getId());
             final TopicTags topicTag = new TopicTags();
             topicTag.setTag(tag);
             topicTag.setTopic(post.getTopic());
