@@ -1,7 +1,5 @@
 package com.brain1.masterdata.rests;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 import com.brain1.masterdata.models.WronglyAnswered;
 import com.brain1.masterdata.records.WronglyAnsweredRecord;
+import com.brain1.masterdata.records.WronglyAnsweredRecordToCore;
 import com.brain1.masterdata.repos.PostRepo;
 import com.brain1.masterdata.repos.TopicRepo;
 import com.brain1.masterdata.repos.UserRepo;
@@ -52,26 +51,6 @@ public class WronglyAnsweredRest {
                 .map(wae -> new WronglyAnsweredRecordToCore(wae.getTopic().getName(),
                         wae.getPost().getRealPostsInTopics(), wae.getPost().getId()))
                 .collect(Collectors.toList());
-    }
-
-    record WronglyAnsweredRecordToCore(String topic, Integer realId, String pid) implements Serializable {
-
-        private static final long serialVersionUID = 9157966109804107492L;
-        public String getTopic() {
-            return topic;
-        }
-
-        public Integer getRealId() {
-            return realId;
-        }
-
-        public String getPid() {
-            return pid;
-        }
-
-        public static long getSerialversionuid() {
-            return serialVersionUID;
-        }
     }
 
     @GetMapping("/count/{uid}")
