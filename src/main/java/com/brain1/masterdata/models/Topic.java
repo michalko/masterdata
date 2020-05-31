@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nullable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -41,6 +42,9 @@ public class Topic implements Serializable {
 
   @NotNull
   Long currentPosts = 0l;
+
+  @Nullable
+  private Long parentTopicId;
 
   public Long getCurrentPosts() {
     return currentPosts;
@@ -98,6 +102,14 @@ public class Topic implements Serializable {
   public String toString() {
     return "Topic [activeCurrently=" + activeCurrently + ", currentPosts=" + currentPosts + ", id=" + id + ", name="
         + name + ", section=" + section + ", tags=" + tags + "]";
+  }
+
+  public Long getParentTopicId() {
+    return parentTopicId;
+  }
+
+  public void setParentTopicId(Long parentTopicId) {
+    this.parentTopicId = parentTopicId;
   }
 
 }
