@@ -16,14 +16,14 @@ public class User implements Serializable {
   private static final long serialVersionUID = 6133645089613436005L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @NotNull
   private String firebaseId;
 
   @NotNull
-  private Boolean startedTest;
+  private Boolean startedTest = false;
 
   public Long getId() {
     return id;

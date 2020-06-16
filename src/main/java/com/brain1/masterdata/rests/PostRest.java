@@ -77,7 +77,6 @@ public class PostRest {
             return post;
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Topic not found"));
 
-        System.out.println("tags" + postTransport.tags().toString());
         if (!postTransport.tags().isEmpty()) {
             final List<String> tags = postTransport.tags();
             postService.updateTagsInDb(post, postTransport.topicID(), tags);
@@ -85,7 +84,6 @@ public class PostRest {
         post.setId(postTransport.id());
         post.setRealPostsInTopics(postTransport.realPostsInTopics());
 
-        System.out.println("saving" + post);
         return postRepo.save(post);
     }
 
