@@ -23,7 +23,6 @@ public class InitSessionRest {
 
     @GetMapping("/start/{uid}/{topic}")
     public StartTestSessionData initSession(@PathVariable @Nonnull String uid, @PathVariable @Nonnull String topic) {
-        System.out.println("yea "  +topic );
         return new StartTestSessionData(wronglyAnsweredRest.getAllForUser(uid, topic),
                 topicRepo.findByName(topic).get().getCurrentPosts());
     }
