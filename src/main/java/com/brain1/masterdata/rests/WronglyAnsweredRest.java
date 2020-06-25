@@ -14,6 +14,7 @@ import com.brain1.masterdata.repos.PostRepo;
 import com.brain1.masterdata.repos.TopicRepo;
 import com.brain1.masterdata.repos.UserRepo;
 import com.brain1.masterdata.repos.WronglyAnsweredRepo;
+import com.brain1.masterdata.services.UpdateWronglyAnswersForUser;
 import com.brain1.masterdata.services.WronglyAnsweredService;
 import com.google.common.collect.Lists;
 
@@ -42,6 +43,8 @@ public class WronglyAnsweredRest {
     TopicRepo topicRepo;
     @Autowired
     WronglyAnsweredService wronglyAnsweredService;
+    @Autowired
+    UpdateWronglyAnswersForUser updateWronglyAnswersForUser;
 
     @GetMapping("/{uid}/{topic}")
     public List<WronglyAnsweredRecordToCore> getAllForUser(@PathVariable @Nonnull String uid,
@@ -62,8 +65,8 @@ public class WronglyAnsweredRest {
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void incDecTimesWrong(@PathVariable @Nonnull String uid,
             @NotNull @NotEmpty @RequestBody final List<WronglyAnsweredRecord> warsArr) {
-        Lists.newArrayList(warsArr).forEach(
-                war -> wronglyAnsweredService.incOrDecWronglyTimesAnswered(getWronglyAnsweredEntity(war), war.inc()));
+        Lists.newArrayList(warsArr).forEach(war -> updateWronglyAnswersForUser
+                .incOrDecWronglyTimesAnswered(getWronglyAnsweredEntity(war), war.inc()));
     }
 
     private WronglyAnswered getWronglyAnsweredEntity(@Nonnull final WronglyAnsweredRecord war) {

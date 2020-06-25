@@ -41,25 +41,6 @@ public class WronglyAnsweredService {
         return wa;
     }
 
-    public void incOrDecWronglyTimesAnswered(@Nonnull final WronglyAnswered updated, final boolean shouldIncrement) {
-        if (shouldIncrement)
-            increment(updated);
-        else
-            decrement(updated);
-    }
+    
 
-    private void increment(@Nonnull final WronglyAnswered updated) {
-        updated.setAnsweredWronglyTimes(updated.getAnsweredWronglyTimes() + 1);
-        wronglyAnsweredRepo.save(updated);
-    }
-
-    private void decrement(@Nonnull final WronglyAnswered updated) {
-        final var newAw = updated.getAnsweredWronglyTimes() - 1;
-        if (newAw <= 0) {
-            wronglyAnsweredRepo.delete(updated);
-        } else {
-            updated.setAnsweredWronglyTimes(newAw);
-            wronglyAnsweredRepo.save(updated);
-        }
-    }
 }
